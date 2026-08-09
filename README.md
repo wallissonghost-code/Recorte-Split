@@ -1,28 +1,45 @@
-# Recorte Split
+# Recorte Split Studio — BETA 1.2.0
 
-Editor web para posicionar uma imagem sobre uma grade e exportar cada célula como arquivo independente.
+Editor web de imagens e sprite sheets com processamento local no navegador.
 
-## Recursos
+## Recursos atuais
 
-- Upload de PNG, JPG e WEBP.
-- Preserva transparência de imagens que já possuem alpha.
-- Remoção opcional de fundo por cor com seletor e tolerância.
-- Amostragem da cor diretamente na imagem.
-- Grade configurável por linhas e colunas e presets 2×2, 3×3, 4×4 e 5×5.
-- Arrastar a imagem e aplicar zoom para posicionar os cortes visualmente.
-- Proporções automática, 1:1, 1:2, 2:1, 9:16 e 16:9.
-- Exportação dos recortes em PNG/WEBP dentro de um único ZIP.
-- Exportação da composição como sprite sheet PNG.
+- Upload de PNG, JPG e WEBP por botão ou arrastar e soltar.
+- Detecção automática de transparência e preservação do canal alpha.
+- Recorte de edição antes da divisão em frames.
+- Brilho, contraste, saturação e rotação.
+- Undo/Redo global com atalhos Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z e Ctrl/Cmd+Y.
+- Zoom pelo scroll do mouse, barra de zoom, centralização e ajuste automático.
+- Remoção de fundo por cor e por IA, com modos Rápido e Profissional.
+- Correção manual da máscara com pincel de restaurar/apagar.
+- Upscale 1×/2×/4×, nitidez, redução de ruído e melhoria automática.
+- Grade configurável, presets de linha e grades até 8×8.
+- Detecção de sprites baseada em transparência quando disponível.
+- Proporções de frame, proporção personalizada, gap entre frames e padding na saída.
+- Quadro mestre com alça arrastável para replicar o enquadramento.
+- Preview individual de todos os frames antes da exportação.
+- Prefixo personalizado e numeração automática dos arquivos.
+- Exportação ZIP, PNG, JPG, WEBP e PDF.
+- Preferências básicas preservadas no navegador com localStorage.
 - Interface responsiva para desktop e celular.
-
-## Uso local
-
-Abra `index.html` em um navegador moderno. Para desenvolvimento, também pode servir a pasta com qualquer servidor HTTP estático.
 
 ## Privacidade
 
-O processamento é feito no navegador. A imagem não precisa ser enviada a um servidor para ser recortada.
+O processamento principal acontece no navegador. As imagens permanecem no dispositivo do usuário durante o fluxo normal de edição.
 
-## Observação sobre remoção de fundo
+## Observações de desempenho
 
-A versão inicial usa remoção por similaridade de cor. Funciona melhor com fundos uniformes. Uma etapa futura pode adicionar segmentação por IA para fundos complexos.
+Operações de IA, upscale e filtros podem exigir bastante memória. O projeto aplica limites de segurança diferentes para celular e desktop para reduzir travamentos.
+
+## Estrutura
+
+- `app.js` — núcleo do editor, grade, histórico, preview e exportação.
+- `ai-bg.js` — remoção de fundo por IA.
+- `quality.js` — upscale, nitidez e redução de ruído.
+- `crop-edit.js` — recorte de edição.
+- `master-fix.js` — quadro mestre redimensionável.
+- `styles.css` — interface responsiva.
+
+## Uso local
+
+Abra `index.html` em um navegador moderno ou sirva a pasta com um servidor HTTP estático.
