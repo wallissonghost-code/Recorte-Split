@@ -9,7 +9,7 @@ const img=$('#animPreviewImg'),play=$('#animPlay'),prev=$('#animPrev'),next=$('#
 let index=0,timer=null,playing=false,loop=true,warnings=new Set();
 function thumbs(){return [...wrap.querySelectorAll('.frameThumb')]}
 function stop(){playing=false;clearInterval(timer);timer=null;if(play)play.textContent='▶ Play'}
-function show(i){const list=thumbs();if(!list.length){if(img)img.removeAttribute('src');if(meta)meta.textContent='Abra uma imagem para visualizar a sequência.';return}index=Math.max(0,Math.min(list.length-1,i));const item=list[index],src=item.querySelector('img')?.src;if(src&&img)img.src=src;list.forEach((el,j)=>el.classList.toggle('playerActive',j===index));if(meta)meta.textContent=`Frame ${index+1} de ${list.length}${warnings.has(index+1)?' • ⚠ corte atravessa conteúdo':''}`;item.scrollIntoView?.({behavior:'smooth',block:'nearest',inline:'center'})}
+function show(i){const list=thumbs();if(!list.length){if(img)img.removeAttribute('src');if(meta)meta.textContent='Abra uma imagem para visualizar a sequência.';return}index=Math.max(0,Math.min(list.length-1,i));const item=list[index],src=item.querySelector('img')?.src;if(src&&img)img.src=src;list.forEach((el,j)=>el.classList.toggle('playerActive',j===index));if(meta)meta.textContent=`Frame ${index+1} de ${list.length}${warnings.has(index+1)?' • ⚠ possível corte de conteúdo':''}`;item.scrollIntoView?.({behavior:'smooth',block:'nearest',inline:'center'})}
 function interval(){return Math.max(50,Math.round(1000/(+speed?.value||6)))}
 function start(){const list=thumbs();if(!list.length)return;stop();playing=true;if(play)play.textContent='⏸ Pausar';timer=setInterval(()=>{const n=index+1;if(n>=thumbs().length){if(loop)show(0);else stop()}else show(n)},interval())}
 play?.addEventListener('click',()=>playing?stop():start());prev?.addEventListener('click',()=>{stop();const l=thumbs().length;show(index<=0?Math.max(0,l-1):index-1)});next?.addEventListener('click',()=>{stop();const l=thumbs().length;show(index>=l-1?0:index+1)});loopBtn?.addEventListener('click',()=>{loop=!loop;loopBtn.textContent=`Loop: ${loop?'ON':'OFF'}`});speed?.addEventListener('input',()=>{if(fps)fps.textContent=`${speed.value} FPS`;if(playing)start()});
@@ -18,4 +18,7 @@ function applyWarnings(){const list=thumbs();list.forEach((item,i)=>{const bad=w
 window.addEventListener('recorte-grid-collisions',e=>{warnings=new Set(e.detail?.frames||[]);applyWarnings()});
 const mo=new MutationObserver(()=>{clearTimeout(mo.t);mo.t=setTimeout(()=>{applyWarnings();if(!img?.src)show(0)},60)});mo.observe(wrap,{childList:true,subtree:false});
 setTimeout(()=>show(0),400);
+const version=document.querySelector('.version');if(version)version.textContent='BETA 1.3.3';
+function loadExtra(src){if(document.querySelector(`script[data-extra="${src}"]`))return;const s=document.createElement('script');s.src=src+'?v=1.3.3&cb='+Date.now();s.dataset.extra=src;document.body.appendChild(s)}
+loadExtra('viewport-lock.js');loadExtra('detector-precision.js');
 })();
