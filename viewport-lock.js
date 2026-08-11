@@ -1,0 +1,16 @@
+(()=>{'use strict';
+const $=s=>document.querySelector(s),stage=$('#stageWrap'),canvas=$('#canvas'),zoom=$('#zoom'),zoomLabel=$('#zoomLabel');if(!stage||!canvas||!zoom)return;
+const style=document.createElement('style');style.textContent=`
+.viewLockBtn{height:34px;padding:0 11px;border-radius:9px;border:1px solid #34374a;background:#10131d;color:#c5c7d1;font:700 11px system-ui;white-space:nowrap}.viewLockBtn.active{border-color:#8b5cf6;background:#23133d;color:#eadfff;box-shadow:0 0 0 1px #7c3aed55 inset}.viewLockBtn .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#6b7280;margin-right:6px;vertical-align:1px}.viewLockBtn.active .dot{background:#a78bfa;box-shadow:0 0 8px #a78bfa}.viewZoomHint{font-size:9px;color:#8f92a3;white-space:nowrap}.viewLockedCanvas{will-change:transform;transition:transform .06s linear}@media(max-width:760px){.viewLockBtn{height:32px;padding:0 9px;font-size:10px}.viewZoomHint{display:none}}
+`;document.head.appendChild(style);
+const box=$('.zoomBox'),btn=document.createElement('button');btn.type='button';btn.className='viewLockBtn';btn.id='viewLockBtn';btn.innerHTML='<span class="dot"></span>Fixar foto';box?.prepend(btn);const hint=document.createElement('span');hint.className='viewZoomHint';hint.textContent='Zoom de inspeção';box?.append(hint);
+let locked=false,inspect=1,sourceZoom=1;
+function apply(){canvas.classList.toggle('viewLockedCanvas',locked);canvas.style.transform=locked?`scale(${inspect})`:'';canvas.style.transformOrigin='50% 50%';stage.style.overflow=locked&&inspect>1?'auto':'';requestAnimationFrame(()=>{window.dispatchEvent(new CustomEvent('recorte-grid-change'));window.dispatchEvent(new Event('resize'))})}
+function setInspect(v){inspect=Math.max(.5,Math.min(4,+v||1));zoom.value=Math.round(inspect*100);if(zoomLabel)zoomLabel.textContent=Math.round(inspect*100)+'%';apply()}
+function toggle(){locked=!locked;btn.classList.toggle('active',locked);btn.innerHTML=locked?'<span class="dot"></span>Foto fixa':'<span class="dot"></span>Fixar foto';if(locked){sourceZoom=window.recorteSplit?.getViewState?.().scale||1;inspect=1;zoom.min=50;zoom.max=400;zoom.value=100;if(zoomLabel)zoomLabel.textContent='100%';hint.textContent='Zoom de inspeção';}else{canvas.style.transform='';zoom.min=10;zoom.max=500;zoom.value=Math.round(sourceZoom*100);if(zoomLabel)zoomLabel.textContent=Math.round(sourceZoom*100)+'%';hint.textContent='Zoom da imagem';zoom.dispatchEvent(new Event('input',{bubbles:true}));}apply()}
+btn.addEventListener('click',toggle);
+document.addEventListener('input',e=>{if(!locked||e.target!==zoom)return;e.stopImmediatePropagation();e.preventDefault();setInspect((+zoom.value||100)/100)},true);
+stage.addEventListener('wheel',e=>{if(!locked)return;e.preventDefault();e.stopImmediatePropagation();setInspect(inspect*(e.deltaY<0?1.1:.9))},{capture:true,passive:false});
+window.addEventListener('recorte-crop-mode',e=>{if(e.detail?.active&&locked){/* mantém a foto fixa; o recorte usa coordenadas reais do canvas */apply()}});
+window.recorteViewport={isLocked:()=>locked,getInspectZoom:()=>inspect};
+})();
