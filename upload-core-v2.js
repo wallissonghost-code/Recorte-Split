@@ -1,17 +1,12 @@
 (()=>{'use strict';
-if(window.__RECORTE_UPLOAD_NATIVE_146__)return;window.__RECORTE_UPLOAD_NATIVE_146__=true;window.__RECORTE_UPLOAD_CORE_V2__=true;
+if(window.__RECORTE_UPLOAD_SINGLE_147__)return;window.__RECORTE_UPLOAD_SINGLE_147__=true;window.__RECORTE_UPLOAD_CORE_V2__=true;
 const input=document.getElementById('fileInput');if(!input)return;
-const ACCEPT='image/*,.png,.jpg,.jpeg,.webp,.heic,.heif';
-input.accept=ACCEPT;input.classList.add('rsCanonicalFile');input.removeAttribute('capture');input.removeAttribute('multiple');
-const style=document.createElement('style');style.id='recorteUploadNative146';style.textContent=`
-.openFile{position:relative!important}.openFile #fileInput.rsCanonicalFile{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;opacity:.001!important;z-index:100!important;margin:0!important;padding:0!important;border:0!important;cursor:pointer!important;pointer-events:auto!important;font-size:16px!important}
-.rsUploadNativeOverlay{position:absolute!important;inset:0!important;z-index:90!important;display:block!important;cursor:pointer!important;background:transparent!important;border:0!important;margin:0!important;padding:0!important;-webkit-tap-highlight-color:transparent!important}
-.heroFile,.upload{position:relative!important}
-`;document.head.appendChild(style);
-// Mantém UM único input real. O app.js continua dono do carregamento e limpa o valor após cada seleção.
+input.accept='image/*,.png,.jpg,.jpeg,.webp,.heic,.heif';input.removeAttribute('capture');input.removeAttribute('multiple');
+// Um único seletor real: o input do botão “Abrir imagem” no topo.
 document.querySelectorAll('input[type="file"]').forEach(el=>{if(el!==input)el.remove()});
-const hero=document.querySelector('.heroFile');if(hero){hero.setAttribute('for','fileInput');hero.querySelectorAll('input[type="file"]').forEach(el=>el.remove())}
-// A área grande usa apenas o comportamento nativo do label. StopPropagation evita o antigo .upload -> input.click() disparar um segundo picker.
-const upload=document.querySelector('.upload');if(upload&&!upload.querySelector('.rsUploadNativeOverlay')){const label=document.createElement('label');label.className='rsUploadNativeOverlay';label.setAttribute('for','fileInput');label.setAttribute('aria-label','Selecionar imagem');label.addEventListener('click',e=>e.stopPropagation());upload.appendChild(label)}
-window.recorteUpload={version:'1.4.6',input:()=>input};window.dispatchEvent(new CustomEvent('recorte-upload-ready',{detail:{version:'1.4.6',native:true,singleInput:true}}));
+document.querySelectorAll('.heroFile,.rsUploadNativeOverlay,.rsNativeFileOverlay').forEach(el=>el.remove());
+// Não adiciona click(), pointerdown, clone de input, overlay ou segundo listener de change.
+// O app.js continua sendo o único responsável por processar o arquivo escolhido.
+window.recorteUpload={version:'1.4.7',input:()=>input,singleButton:true};
+window.dispatchEvent(new CustomEvent('recorte-upload-ready',{detail:{version:'1.4.7',native:true,singleInput:true,singleButton:true}}));
 })();
