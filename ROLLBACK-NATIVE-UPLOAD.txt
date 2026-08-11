@@ -1,0 +1,1 @@
+Temporary diagnostic marker: main page shell rolled back to static legacy HTML to restore native iOS file picker behavior. Newer source files remain preserved in repository history.
