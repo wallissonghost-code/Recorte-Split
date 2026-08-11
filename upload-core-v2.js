@@ -1,0 +1,9 @@
+(()=>{'use strict';if(window.__RECORTE_UPLOAD_CORE_V2__)return;window.__RECORTE_UPLOAD_CORE_V2__=true;
+const input=document.getElementById('fileInput');if(!input)return;
+const open=()=>{try{if(typeof input.showPicker==='function')input.showPicker();else input.click()}catch{try{input.click()}catch{}}};
+// Gatilhos visuais: usa sempre o input principal, sem DataTransfer e sem inputs duplicados.
+document.querySelector('.upload')?.addEventListener('click',e=>{e.preventDefault();open()});
+document.querySelector('.heroFile')?.addEventListener('click',e=>{e.preventDefault();open()});
+// Captura o File ANTES do app limpar input.value. Se o app normal falhar, usa fallback seguro.
+input.addEventListener('change',e=>{const file=e.target.files?.[0];if(!file)return;if(!file.type?.startsWith('image/'))return;const name=file.name,size=file.size;setTimeout(()=>{if(window.recorteSplit?.getCurrent?.())return;const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{try{URL.revokeObjectURL(url)}catch{};if(window.recorteSplit?.setAIResult){window.recorteSplit.setAIResult(im);const info=document.getElementById('fileInfo');if(info){info.classList.remove('hidden');info.innerHTML=`<div class="fileMeta"><b>${name}</b><span>${im.naturalWidth}×${im.naturalHeight}px · ${(size/1048576).toFixed(2)} MB</span></div><div class="alphaBadge">Imagem carregada</div>`}window.dispatchEvent(new CustomEvent('recorte-file-loaded',{detail:{name,width:im.naturalWidth,height:im.naturalHeight}}));}else{console.error('Recorte Split: app.js não inicializou; fallback não encontrou recorteSplit.')}};im.onerror=()=>{try{URL.revokeObjectURL(url)}catch{};alert('Não foi possível abrir esta imagem.');};im.src=url;},120);},true);
+})();
