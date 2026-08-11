@@ -1,0 +1,5 @@
+(()=>{'use strict';
+const proto=window.CanvasRenderingContext2D?.prototype;if(proto&&!proto.__recorteThinStroke){const original=proto.strokeRect;Object.defineProperty(proto,'__recorteThinStroke',{value:true});proto.strokeRect=function(x,y,w,h){if(this?.canvas?.id==='canvas'&&(String(this.strokeStyle).toLowerCase()==='#9b5cff'||String(this.strokeStyle).includes('155, 92, 255'))){this.save();this.lineWidth=.65;this.shadowBlur=.8;original.call(this,x,y,w,h);this.restore();return}return original.call(this,x,y,w,h)}}
+const style=document.createElement('style');style.textContent=`.gridHandle.v:before{width:1px!important}.gridHandle.h:before{height:1px!important}.gridHandle:after{width:14px!important;height:14px!important;font-size:8px!important;border-radius:4px!important;opacity:.48!important}.gridHandle:hover:after,.gridHandle:active:after,.gridHandle.dragging:after{opacity:.16!important}.gridHandle.v:after{left:7px!important}.gridHandle.h:after{top:7px!important}@media(max-width:800px){.gridHandle.v:after{left:10px!important}.gridHandle.h:after{top:10px!important}}`;document.head.appendChild(style);
+setTimeout(()=>window.recorteSplit?.redraw?.(),250);
+})();
