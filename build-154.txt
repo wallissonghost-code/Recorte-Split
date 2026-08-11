@@ -1,0 +1,3 @@
+Recorte Split BETA 1.5.4
+Build: 154-20260811-rearm-native
+Fix: rearm native iOS file input after change/cancel; align platform and version lock.
