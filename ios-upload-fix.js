@@ -1,18 +1,19 @@
-(()=>{'use strict';if(window.__RECORTE_IOS_UPLOAD_FIX_144__)return;window.__RECORTE_IOS_UPLOAD_FIX_144__=true;
-const input=document.getElementById('fileInput');if(!input)return;
-input.accept='image/*,.png,.jpg,.jpeg,.webp,.heic,.heif';
-input.setAttribute('aria-label','Selecionar imagem');
-const style=document.createElement('style');style.id='iosUploadFix144';style.textContent=`
-#fileInput{display:block!important;position:fixed!important;left:-10000px!important;top:0!important;width:1px!important;height:1px!important;opacity:.001!important;overflow:hidden!important;pointer-events:none!important}
-.upload{position:relative!important}.rsNativeFileOverlay{position:absolute!important;inset:0!important;z-index:12!important;display:block!important;cursor:pointer!important;background:transparent!important;border:0!important;margin:0!important;padding:0!important;-webkit-tap-highlight-color:transparent!important}.heroFile[for="fileInput"],.openFile[for="fileInput"]{cursor:pointer!important}
+(()=>{'use strict';if(window.__RECORTE_IOS_UPLOAD_NATIVE_145__)return;window.__RECORTE_IOS_UPLOAD_NATIVE_145__=true;
+const $=s=>document.querySelector(s);const ACCEPT='image/*,.png,.jpg,.jpeg,.webp,.heic,.heif';
+const style=document.createElement('style');style.id='iosUploadNative145';style.textContent=`
+.openFile,.heroFile,.upload{position:relative!important}.rsNativeFileInput{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:.001!important;display:block!important;z-index:50!important;cursor:pointer!important;margin:0!important;padding:0!important;border:0!important;pointer-events:auto!important;font-size:0!important}.rsNativeFileInput::-webkit-file-upload-button{width:100%!important;height:100%!important;opacity:0!important}.rsUploadBusy:after{content:'Abrindo imagem…';position:absolute;inset:0;z-index:60;display:grid;place-items:center;background:#0b0e15dd;color:#ddd6fe;font:800 11px system-ui;border-radius:inherit;pointer-events:none}
 `;document.head.appendChild(style);
-// O botão do topo já contém o input principal: mantém associação nativa.
-const top=input.closest('.openFile');if(top)top.setAttribute('for','fileInput');
-// Remove o segundo input da chamada central e transforma o próprio label em gatilho nativo.
-const hero=document.querySelector('.heroFile');if(hero){hero.querySelectorAll('input[type="file"]').forEach(el=>{if(el!==input)el.remove()});hero.setAttribute('for','fileInput')}
-// A área grande era um DIV acionando input.click(). No iOS isso é instável. Uma label transparente recebe o toque nativamente.
-const upload=document.querySelector('.upload');if(upload&&!upload.querySelector('.rsNativeFileOverlay')){const overlay=document.createElement('label');overlay.className='rsNativeFileOverlay';overlay.setAttribute('for','fileInput');overlay.setAttribute('aria-label','Selecionar imagem');overlay.addEventListener('click',e=>e.stopPropagation());upload.appendChild(overlay)}
-// Remove inputs de arquivo órfãos/duplicados, preservando somente o canônico.
-document.querySelectorAll('input[type="file"]').forEach(el=>{if(el!==input)el.remove()});
-window.dispatchEvent(new CustomEvent('recorte-ios-upload-ready'));
+function makeInput(host,id){if(!host)return null;let input=id?document.getElementById(id):host.querySelector('input[type=file]');if(!input){input=document.createElement('input');input.type='file';host.appendChild(input)}input.accept=ACCEPT;input.classList.add('rsNativeFileInput');input.removeAttribute('capture');return input}
+const topHost=$('.topActions .openFile')||$('.openFile');const top=makeInput(topHost,'fileInput');const heroHost=$('.heroFile');const hero=makeInput(heroHost);const uploadHost=$('.upload');const area=makeInput(uploadHost);
+async function viaImage(file){return await new Promise((ok,no)=>{const url=URL.createObjectURL(file),im=new Image();let done=false;const finish=(v,err)=>{if(done)return;done=true;try{URL.revokeObjectURL(url)}catch{};err?no(err):ok(v)};im.onload=()=>finish(im);im.onerror=()=>finish(null,new Error('image decode failed'));im.src=url})}
+async function viaBitmap(file){if(typeof createImageBitmap!=='function')throw new Error('bitmap unavailable');const b=await createImageBitmap(file),c=document.createElement('canvas');c.width=b.width;c.height=b.height;c.getContext('2d').drawImage(b,0,0);try{b.close?.()}catch{}return c}
+async function viaReader(file){return await new Promise((ok,no)=>{const r=new FileReader();r.onerror=()=>no(r.error||new Error('reader failed'));r.onload=()=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=r.result};r.readAsDataURL(file)})}
+async function decode(file){try{return await viaImage(file)}catch{}try{return await viaBitmap(file)}catch{}return await viaReader(file)}
+function enableEditor(){['aiRemoveBtn','aiProRemoveBtn','autoDetect','applyEdit','exportZip','exportSheet','exportPdf','cropStart','centerImage'].forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=false})}
+function info(file,im){const box=$('#fileInfo');if(box){box.classList.remove('hidden');const w=im.naturalWidth||im.width||0,h=im.naturalHeight||im.height||0;box.innerHTML=`<div class="fileMeta"><b>${file.name||'Imagem'}</b><span>${w}×${h}px · ${(file.size/1048576).toFixed(2)} MB</span></div><div class="alphaBadge ok">✓ Imagem carregada</div>`}}
+let loading=false;async function handle(input){const file=input.files?.[0];if(!file||loading)return;loading=true;const host=input.parentElement;host?.classList.add('rsUploadBusy');try{const im=await decode(file);if(!im)throw new Error('decode vazio');window.recorteGrid?.reset?.();if(!window.recorteSplit?.setAIResult)throw new Error('editor não inicializado');window.recorteSplit.setAIResult(im);enableEditor();info(file,im);const fmt=$('#format');if(fmt&&/png|webp|heic|heif/i.test(file.type+' '+file.name))fmt.value='png';window.dispatchEvent(new CustomEvent('recorte-file-loaded',{detail:{name:file.name,width:im.naturalWidth||im.width,height:im.naturalHeight||im.height,iosNative:true}}));}catch(err){console.error('Recorte Split iOS upload:',err);alert('Não foi possível abrir esta imagem no Safari. Tente escolher outra foto ou salvar como PNG/JPG.')}finally{loading=false;host?.classList.remove('rsUploadBusy');try{input.value=''}catch{}}}
+[top,hero,area].filter(Boolean).forEach(input=>{if(input.__rsNativeWired)return;input.__rsNativeWired=true;input.addEventListener('click',e=>{e.stopPropagation()});input.addEventListener('change',e=>{e.stopPropagation();handle(input)},true)});
+// Evita os gatilhos programáticos antigos: no iOS o toque deve atingir o input real diretamente.
+if(/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.maxTouchPoints>1){document.querySelectorAll('.upload,.heroFile').forEach(el=>el.addEventListener('click',e=>{if(e.target?.matches?.('input[type=file]'))return;e.stopImmediatePropagation()},true))}
+window.dispatchEvent(new CustomEvent('recorte-ios-upload-ready',{detail:{native:true}}));
 })();
