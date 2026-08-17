@@ -4,58 +4,78 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta name="theme-color" content="#07080d">
-  <title>Caos Live · Skill FX Lab</title>
-  <link rel="stylesheet" href="styles.css?v=1.1.0">
+  <title>Caos Live · Skill FX Lab Pro</title>
+  <link rel="stylesheet" href="styles.css?v=2.0.0">
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><span class="mark">CL</span><div><b>CAOS LIVE <em>FX LAB</em></b><small>Laboratório de Skills, morte e performance</small></div></div>
-  <div class="topActions"><a href="../index.html">← Recorte Split</a><label class="upload"><input id="mobInput" type="file" accept="image/png,image/webp,image/jpeg"><span>＋ Carregar Mob</span></label></div>
+  <div class="brand"><span class="mark">CL</span><div><b>CAOS LIVE <em>FX LAB PRO</em></b><small>Editor visual de skills, mortes e performance</small></div></div>
+  <div class="topActions"><span class="build">BUILD 2.0</span><a href="../index.html">← Recorte Split</a><label class="upload"><input id="mobInput" type="file" accept="image/png,image/webp,image/jpeg"><span>＋ Carregar Mob</span></label></div>
 </header>
 <main>
   <aside class="panel">
-    <section class="card hero"><span class="eyebrow">SKILL TESTER 1.1</span><h1>Crie o efeito e teste se o jogo aguenta.</h1><p>Preview visual, morte do mob, LOD, orçamento de partículas e stress test em um só lugar.</p></section>
+    <section class="card hero"><span class="eyebrow">VFX AUTHORING TOOL</span><h1>Monte, combine e teste efeitos antes do Caos Live.</h1><p>12 famílias de FX, timeline, efeito orbital, morte por partículas, LOD, stress test e preset exportável.</p></section>
 
     <section class="card">
-      <div class="sectionHead"><span>01</span><div><h2>Skill</h2><p>Efeito principal</p></div></div>
+      <div class="sectionHead"><span>01</span><div><h2>Biblioteca de FX</h2><p>Escolha a família principal</p></div></div>
       <div class="skillGrid">
-        <button class="skill active" data-skill="lightning">⚡<b>Raio</b><small>Impacto elétrico</small></button>
+        <button class="skill active" data-skill="lightning">⚡<b>Raio</b><small>Descarga elétrica</small></button>
+        <button class="skill" data-skill="chain">⌁<b>Chain</b><small>Arcos em sequência</small></button>
         <button class="skill" data-skill="flash">✦<b>Flash</b><small>Explosão de luz</small></button>
         <button class="skill" data-skill="ash">◌<b>Cinzas</b><small>Desintegração</small></button>
         <button class="skill" data-skill="burst">✺<b>Partículas</b><small>Explosão física</small></button>
+        <button class="skill" data-skill="fire">🔥<b>Fogo</b><small>Queima ascendente</small></button>
+        <button class="skill" data-skill="ice">❄<b>Gelo</b><small>Congela e estilhaça</small></button>
+        <button class="skill" data-skill="void">◈<b>Void</b><small>Implosão sombria</small></button>
+        <button class="skill" data-skill="poison">☣<b>Veneno</b><small>Nuvem corrosiva</small></button>
+        <button class="skill" data-skill="holy">✧<b>Luz</b><small>Coluna sagrada</small></button>
+        <button class="skill" data-skill="shockwave">◎<b>Shockwave</b><small>Onda expansiva</small></button>
+        <button class="skill" data-skill="soul">♢<b>Alma</b><small>Essência sai do corpo</small></button>
       </div>
     </section>
 
-    <section class="card">
-      <div class="sectionHead"><span>02</span><div><h2>Morte do Mob</h2><p>Resposta ao dano fatal</p></div></div>
-      <label>Animação final<select id="deathMode"><option value="ash">Virar cinzas</option><option value="dissolve">Dissolver em partículas</option><option value="burn">Queimar + cinzas</option><option value="burst">Explodir partículas</option><option value="fade">Fade simples</option></select></label>
-      <label>Duração <output id="durationOut">1.40s</output><input id="duration" type="range" min="500" max="3000" step="50" value="1400"></label>
-      <label>Partículas por morte <output id="particleOut">70</output><input id="particleCount" type="range" min="10" max="180" value="70"></label>
-      <label>Intensidade <output id="intensityOut">75%</output><input id="intensity" type="range" min="10" max="100" value="75"></label>
-      <label class="check"><input id="screenShake" type="checkbox" checked> Tremor de câmera</label>
-      <label class="check"><input id="slowMo" type="checkbox" checked> Micro slow-motion</label>
+    <section class="card accentCard" id="lightningPanel">
+      <div class="sectionHead"><span>02</span><div><h2>Coreografia do Raio</h2><p>Raio pode envolver o mob antes da morte</p></div></div>
+      <label>Trajetória<select id="lightningPath"><option value="strike">Queda direta</option><option value="orbit" selected>Orbitar o mob</option><option value="cage">Gaiola elétrica</option><option value="spiral">Espiral descendente</option></select></label>
+      <label>Voltas ao redor <output id="orbitTurnsOut">2.5×</output><input id="orbitTurns" type="range" min="1" max="5" step="0.5" value="2.5"></label>
+      <label>Espessura <output id="boltWidthOut">3</output><input id="boltWidth" type="range" min="1" max="8" value="3"></label>
+      <label>Ramificações <output id="branchOut">4</output><input id="branchCount" type="range" min="0" max="10" value="4"></label>
+      <label class="check"><input id="orbitBeforeDeath" type="checkbox" checked> Completar órbita antes da desintegração</label>
     </section>
 
     <section class="card">
-      <div class="sectionHead"><span>03</span><div><h2>Camadas</h2><p>Composição do impacto</p></div></div>
+      <div class="sectionHead"><span>03</span><div><h2>Morte do Mob</h2><p>Resposta ao dano fatal</p></div></div>
+      <label>Animação final<select id="deathMode"><option value="particles" selected>Virar partículas</option><option value="ash">Virar cinzas</option><option value="dissolve">Dissolver progressivamente</option><option value="burn">Queimar + cinzas</option><option value="shatter">Estilhaçar</option><option value="implode">Implodir</option><option value="fade">Fade simples</option></select></label>
+      <label>Duração <output id="durationOut">1.60s</output><input id="duration" type="range" min="600" max="4000" step="50" value="1600"></label>
+      <label>Partículas por morte <output id="particleOut">90</output><input id="particleCount" type="range" min="10" max="240" value="90"></label>
+      <label>Intensidade <output id="intensityOut">80%</output><input id="intensity" type="range" min="10" max="100" value="80"></label>
+      <label>Escala do efeito <output id="fxScaleOut">100%</output><input id="fxScale" type="range" min="50" max="180" value="100"></label>
+    </section>
+
+    <section class="card">
+      <div class="sectionHead"><span>04</span><div><h2>Camadas</h2><p>Composição profissional</p></div></div>
       <label class="check"><input id="impactFlash" type="checkbox" checked> Flash de impacto</label>
       <label class="check"><input id="groundGlow" type="checkbox" checked> Luz no chão</label>
       <label class="check"><input id="sparks" type="checkbox" checked> Faíscas / fragmentos</label>
-      <label class="check"><input id="afterImage" type="checkbox"> Pós-imagem do mob</label>
+      <label class="check"><input id="afterImage" type="checkbox" checked> Pós-imagem do mob</label>
+      <label class="check"><input id="screenShake" type="checkbox" checked> Tremor de câmera</label>
+      <label class="check"><input id="slowMo" type="checkbox" checked> Micro slow-motion</label>
+      <label class="check"><input id="chromatic" type="checkbox"> Aberração cromática simulada</label>
+      <label class="check"><input id="vignette" type="checkbox" checked> Vinheta de impacto</label>
     </section>
 
     <section class="card perfCard">
-      <div class="sectionHead"><span>04</span><div><h2>Performance</h2><p>Simule uma horda morrendo</p></div></div>
-      <label>Perfil<select id="qualityPreset"><option value="low">Mobile fraco</option><option value="medium" selected>Mobile / padrão</option><option value="high">PC / alto</option></select></label>
-      <label>Mobs simultâneos <output id="mobCountOut">12</output><input id="mobCount" type="range" min="1" max="50" value="12"></label>
-      <label>Orçamento global de partículas <output id="budgetOut">420</output><input id="particleBudget" type="range" min="80" max="1200" step="20" value="420"></label>
-      <label class="check"><input id="lodEnabled" type="checkbox" checked> LOD automático por distância/carga</label>
-      <div class="perfGrid"><div><small>FPS</small><b id="fpsBig">60</b></div><div><small>Partículas</small><b id="particleLive">0</b></div><div><small>Mobs FX</small><b id="mobLive">0</b></div></div>
-      <button id="stressBtn" class="warning">☄ TESTAR HORDA</button>
+      <div class="sectionHead"><span>05</span><div><h2>Performance</h2><p>Simule uma horda morrendo</p></div></div>
+      <label>Perfil<select id="qualityPreset"><option value="low">Mobile fraco</option><option value="medium" selected>Mobile / padrão</option><option value="high">PC / alto</option><option value="ultra">Ultra / laboratório</option></select></label>
+      <label>Mobs simultâneos <output id="mobCountOut">12</output><input id="mobCount" type="range" min="1" max="80" value="12"></label>
+      <label>Orçamento global de partículas <output id="budgetOut">500</output><input id="particleBudget" type="range" min="80" max="2000" step="20" value="500"></label>
+      <label class="check"><input id="lodEnabled" type="checkbox" checked> LOD automático por carga</label>
+      <div class="perfGrid"><div><small>FPS</small><b id="fpsBig">60</b></div><div><small>Partículas</small><b id="particleLive">0</b></div><div><small>Mobs FX</small><b id="mobLive">0</b></div><div><small>Frame</small><b id="frameMs">16.7ms</b></div></div>
+      <div class="actions"><button id="stressBtn" class="warning">☄ TESTAR HORDA</button><button id="autoStressBtn" class="secondary">Auto 10→80</button></div>
     </section>
 
     <section class="card">
-      <div class="sectionHead"><span>05</span><div><h2>Preset</h2><p>Levar configuração pro jogo</p></div></div>
+      <div class="sectionHead"><span>06</span><div><h2>Preset</h2><p>Levar configuração pro jogo</p></div></div>
       <div class="actions"><button id="resetBtn" class="secondary">Resetar</button><button id="playBtn" class="primary">▶ TESTAR SKILL</button></div>
       <div class="actions"><button id="copyPreset" class="secondary">Copiar JSON</button><button id="downloadPreset" class="secondary">Baixar preset</button></div>
       <pre id="presetPreview"></pre>
@@ -63,15 +83,18 @@
   </aside>
 
   <section class="workspace">
-    <div class="workspaceTop"><div><span class="live"></span><b>ARENA DE TESTE</b><small>Preview em tempo real · Canvas 2D</small></div><span id="fps">60 FPS</span></div>
-    <div id="arena" class="arena"><canvas id="fxCanvas"></canvas><div class="arenaTip">Toque na arena para repetir o efeito.</div></div>
+    <div class="workspaceTop"><div><span class="live"></span><b>ARENA DE TESTE PRO</b><small>Preview em tempo real · Canvas 2D · toque para repetir</small></div><div class="hud"><span id="fps">60 FPS</span><span id="qualityBadge">MEDIUM</span></div></div>
+    <div id="arena" class="arena"><canvas id="fxCanvas"></canvas><div class="arenaGrid"></div><div class="arenaTip">Raio orbital: selecione <b>Raio → Orbitar o mob → Virar partículas</b>.</div></div>
     <div class="timeline card">
-      <div class="timelineHead"><div><b>TIMELINE DO IMPACTO</b><small>Fluxo pensado para integração no Caos Live</small></div><span id="status">PRONTO</span></div>
-      <div class="track"><div class="event"><span>0ms</span><b>Cast</b><small>Skill inicia</small></div><div class="event"><span>100–140ms</span><b>Impacto</b><small>Luz + raio</small></div><div class="event"><span>160–220ms</span><b>Fatal</b><small>Trava colisão</small></div><div class="event"><span>220ms+</span><b>Death FX</b><small>Cinzas / dissolve</small></div><div class="event"><span>Fim</span><b>Cleanup</b><small>Pool reutiliza FX</small></div></div>
+      <div class="timelineHead"><div><b>TIMELINE DO IMPACTO</b><small>Sequência visual usada pelo preview</small></div><span id="status">PRONTO</span></div>
+      <div class="track"><div class="event activeEvent"><span>0ms</span><b>Cast</b><small>FX nasce</small></div><div class="event"><span>80ms</span><b>Contato</b><small>Flash / glow</small></div><div class="event"><span>80–600ms</span><b>Envolver</b><small>Órbita / carga</small></div><div class="event"><span>600ms+</span><b>Fatal FX</b><small>Partículas / cinzas</small></div><div class="event"><span>Fim</span><b>Cleanup</b><small>Pool + LOD</small></div></div>
     </div>
-    <div class="notes card"><b>REGRA DE PRODUÇÃO</b><p>O Lab agora limita o custo visual por orçamento global. Se 30 mobs morrerem juntos, o LOD reduz partículas e detalhes em vez de deixar todos os efeitos rodarem no máximo.</p></div>
+    <div class="proGrid">
+      <div class="notes card"><b>PIPELINE</b><p><strong>Skill → contato → coreografia → fatal → death FX → cleanup.</strong> A morte não precisa acontecer no mesmo frame do dano; podemos segurar o corpo por alguns milissegundos para vender o impacto visual.</p></div>
+      <div class="notes card"><b>EFEITO DE RAIO PROPOSTO</b><p>O raio cai, cria um arco que circula o corpo em profundidade simulada, aumenta a luminosidade, fecha a órbita e converte a silhueta do mob em partículas elétricas.</p></div>
+    </div>
   </section>
 </main>
-<script src="app.js?v=1.1.0"></script>
+<script src="app.js?v=2.0.0"></script>
 </body>
 </html>
