@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta name="theme-color" content="#07080d">
   <title>Caos Live · Skill FX Lab Pro</title>
-  <link rel="stylesheet" href="styles.css?v=2.1.0">
+  <link rel="stylesheet" href="styles.css?v=2.2.0">
 </head>
 <body>
 <header class="topbar">
   <div class="brand"><span class="mark">CL</span><div><b>CAOS LIVE <em>FX LAB PRO</em></b><small>Editor visual de skills, mortes e performance</small></div></div>
-  <div class="topActions"><span class="build">BUILD 2.1</span><a href="../index.html">← Recorte Split</a><label class="upload"><input id="mobInput" type="file" accept="image/png,image/webp,image/jpeg"><span>＋ Carregar Mob</span></label></div>
+  <div class="topActions"><span class="build">BUILD 2.2</span><a href="../index.html">← Recorte Split</a><label class="upload"><input id="mobInput" type="file" accept="image/png,image/webp,image/jpeg"><span>＋ Carregar Mob</span></label></div>
 </header>
 <main>
   <aside class="panel">
-    <section class="card hero"><span class="eyebrow">VFX AUTHORING TOOL</span><h1>Monte skills completas, não só efeitos soltos.</h1><p>Biblioteca ampliada, emissores por posição, multi-hit, gelo com espinhos, luz avançada, raio orbital, death FX e stress test.</p></section>
+    <section class="card hero"><span class="eyebrow">VFX AUTHORING TOOL</span><h1>Monte skills completas, não só efeitos soltos.</h1><p>Biblioteca ampliada, emissores por posição, gelo com espinhos, luz avançada, raio por silhueta, death FX e stress test.</p></section>
 
     <section class="card">
       <div class="sectionHead"><span>01</span><div><h2>Biblioteca de FX</h2><p>Escolha a família principal</p></div></div>
@@ -52,12 +52,13 @@
     </section>
 
     <section class="card accentCard" id="lightningPanel">
-      <div class="sectionHead"><span>03</span><div><h2>Coreografia do Raio</h2><p>Envolver o mob antes da morte</p></div></div>
-      <label>Trajetória<select id="lightningPath"><option value="strike">Queda direta</option><option value="orbit" selected>Orbitar o mob</option><option value="cage">Gaiola elétrica</option><option value="spiral">Espiral descendente</option></select></label>
-      <label>Voltas ao redor <output id="orbitTurnsOut">2.5×</output><input id="orbitTurns" type="range" min="1" max="5" step="0.5" value="2.5"></label>
+      <div class="sectionHead"><span>03</span><div><h2>Coreografia do Raio</h2><p>Agora pode seguir a silhueta real do sprite</p></div></div>
+      <label>Trajetória<select id="lightningPath"><option value="contour" selected>Contorno do sprite · PRO</option><option value="strike">Queda direta</option><option value="orbit">Orbitar o mob</option><option value="cage">Gaiola elétrica</option><option value="spiral">Espiral descendente</option></select></label>
+      <div class="info">No modo Contorno, carregue um PNG transparente. O Lab lê a borda do corpo e faz o raio percorrer cabeça, ombros, braços, tronco e pernas. Sem transparência, usa órbita como fallback.</div>
+      <label>Voltas / persistência <output id="orbitTurnsOut">2.5×</output><input id="orbitTurns" type="range" min="1" max="5" step="0.5" value="2.5"></label>
       <label>Espessura <output id="boltWidthOut">3</output><input id="boltWidth" type="range" min="1" max="8" value="3"></label>
       <label>Ramificações <output id="branchOut">4</output><input id="branchCount" type="range" min="0" max="10" value="4"></label>
-      <label class="check"><input id="orbitBeforeDeath" type="checkbox" checked> Completar órbita antes da desintegração</label>
+      <label class="check"><input id="orbitBeforeDeath" type="checkbox" checked> Completar percurso antes da desintegração</label>
     </section>
 
     <section class="card iceCard" id="icePanel">
@@ -117,14 +118,15 @@
 
   <section class="workspace">
     <div class="workspaceTop"><div><span class="live"></span><b>ARENA DE TESTE PRO</b><small>Preview em tempo real · Canvas 2D · toque para repetir</small></div><div class="hud"><span id="fps">60 FPS</span><span id="qualityBadge">MEDIUM</span></div></div>
-    <div id="arena" class="arena"><canvas id="fxCanvas"></canvas><div class="arenaTip">Teste: <b>Gelo → Espinhos → Ao redor → Congelar e explodir azul</b>.</div></div>
+    <div id="arena" class="arena"><canvas id="fxCanvas"></canvas><div class="arenaTip">Teste recomendado: <b>Raio → Contorno do sprite → Virar partículas</b>.</div></div>
     <div class="timeline card">
       <div class="timelineHead"><div><b>TIMELINE DO IMPACTO</b><small>Sequência visual usada pelo preview</small></div><span id="status">PRONTO</span></div>
-      <div class="track"><div class="event activeEvent"><span>0ms</span><b>Cast</b><small>FX nasce</small></div><div class="event"><span>80ms</span><b>Contato</b><small>Flash / glow</small></div><div class="event"><span>80–700ms</span><b>Coreografia</b><small>Órbita / espinhos / feixes</small></div><div class="event"><span>700ms+</span><b>Fatal FX</b><small>Explosão / partículas</small></div><div class="event"><span>Fim</span><b>Cleanup</b><small>Pool + LOD</small></div></div>
+      <div class="track"><div class="event activeEvent"><span>0ms</span><b>Cast</b><small>FX nasce</small></div><div class="event"><span>80ms</span><b>Contato</b><small>Flash / glow</small></div><div class="event"><span>80–700ms</span><b>Coreografia</b><small>Contorno / espinhos / feixes</small></div><div class="event"><span>700ms+</span><b>Fatal FX</b><small>Explosão / partículas</small></div><div class="event"><span>Fim</span><b>Cleanup</b><small>Pool + LOD</small></div></div>
     </div>
-    <div class="proGrid"><div class="notes card"><b>COMBINAÇÃO EXEMPLO</b><p><strong>8 espinhos de gelo cercam o mob → avançam → corpo fica azul → congelamento fecha → explosão azul → fragmentos.</strong></p></div><div class="notes card"><b>PIPELINE</b><p>Skill → emissor → coreografia → impacto → fatal → death FX → cleanup. Os presets exportam todas essas decisões para integração futura no Caos Live.</p></div></div>
+    <div class="proGrid"><div class="notes card"><b>RAIO POR SILHUETA</b><p><strong>O PNG transparente é analisado e o arco elétrico passa rente ao desenho do mob</strong>, em vez de usar apenas uma elipse em volta do retângulo do sprite.</p></div><div class="notes card"><b>PIPELINE</b><p>Skill → contato → percurso pela silhueta → impacto fatal → partículas → cleanup.</p></div></div>
   </section>
 </main>
 <script src="app.js?v=2.1.0"></script>
+<script src="contour-lightning.js?v=2.2.0"></script>
 </body>
 </html>
